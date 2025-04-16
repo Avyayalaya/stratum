@@ -31,7 +31,7 @@ It underpins high-leverage work in:
 |------------|------------------|----------------|---------|
 | **First Principles Thinking** | Clear reasoning from the ground up | Solving non-obvious problems in new domains | Re-architecting a pricing model from value delivered, not market norms |
 | **High-Quality Decision-Making** | Choosing well under ambiguity and risk | Product bets, GTM pivots, org design | Deciding whether to launch a flawed feature or hold off and risk being late |
-| **Scenario Thinking** *(formerly Mental Simulation)* | Simulating multiple futures before acting | Forecasting, debugging strategy, de-risking choices | Mapping 3 possible outcomes of a hiring freeze or expansion |
+| **Scenario Thinking** | Simulating multiple futures before acting | Forecasting, debugging strategy, de-risking choices | Mapping 3 possible outcomes of a hiring freeze or expansion |
 | **Feedback Calibration** | Adjusting fast, learning continuously | Rapid iteration, product validation, hiring signals | Rewriting your roadmap every 2 weeks based on what’s working |
 | **Meta-Learning** | Acquiring complex new skills fast | Cross-domain shifts, tech upskilling, leadership transitions | Teaching yourself enough about LLMs to manage a team in 90 days |
 
