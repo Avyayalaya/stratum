@@ -1,1 +1,21 @@
+# Node dependencies
+node_modules/
+
+# Build output
+dist/
+
+# System files
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+
+# Vite cache
+.vite
  
