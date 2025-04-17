@@ -108,8 +108,7 @@ Stratum is MIT licensed. Fork, remix, build teams with it, or integrate into you
 ## 💬 Contributions & Feedback
 If this framework helped you—or you’ve adapted it for your org, team, or portfolio—reach out. Open an issue, suggest an improvement, or drop a note.
 
-> Because building great teams is not about scaling faster.  
-> It’s about thinking deeper, standing stronger, and earning trust louder.
+> Every high-functioning team runs on invisible code. Stratum makes that code visible—and buildable.	
 
 ---
 
