@@ -1,8 +1,8 @@
-# Stratum: A Meta-Skill Framework for Building Great Teams
+# Stratum: A Leadership Framework for Hiring, Evaluating, and Scaling Elite Teams
 
-**Stratum** is a leadership framework designed for individuals and teams seeking to master the invisible skills that power high-performance collaboration. It helps you identify, evaluate, and grow the foundational behaviors behind clarity, resilience, trust, and influence.
+**Stratum** is a leadership framework for building elite teams. It focuses on hiring the right people, evaluating them on core meta-skills, and scaling a culture of trust and clarity. Use it to identify, assess, and grow the behaviors behind outstanding collaboration.
 
-This repository includes three fully scaffolded meta-skill domains, along with tactical tools, simulations, and flywheel case studies that bring them to life in real-world teams.
+This repository includes three fully scaffolded meta-skill domains, along with tactical tools, interview simulations, and flywheel case studies that bring them to life in real-world teams.
 
 > **Why Stratum?**
 > Because great teams aren't built on tactics—they’re built on thinking, character, and trust, practiced daily.
@@ -74,20 +74,19 @@ Each domain includes 5 meta-skills, foundational documents, tactical playbooks, 
 
 ## 🧭 How to Use Stratum
 
-### For Individuals:
-- Diagnose your growth edges with the domain diagnostics
-- Practice weekly using simulation decks and journaling from field notes
-- Reflect using flywheels to trace your real-time behavior under pressure
+### During Hiring
+- Apply the domain [Diagnostics](./evaluation-tools/cognitive-mastery-diagnostic.md) and [Scenario Decks](./scenario-templates/cognitive-scenarios.md) as advanced interview tools.
+- Evaluate candidates against the [Meta-Skill Framework](./framework/overview.md) to surface strengths and gaps.
 
-### For Leaders:
-- Use diagnostic tools in 1:1s, team offsites, or calibration sessions
-- Facilitate simulations to surface real decision habits in a safe space
-- Reinforce field notes as team rituals and micro-habits
+### Team Evaluation
+- Run diagnostics regularly to measure progress and spot coaching opportunities.
+- Debrief real projects using the flywheel case studies.
+- Reinforce growth areas through the field notes and playbooks.
 
-### For Coaches:
-- Run multi-domain assessments and debriefs for founders, leaders, or teams
-- Coach meta-skill stacks relevant to the leader’s current challenge (e.g. patience + influence)
-- Use flywheels to unpack real-world moments with high fidelity
+### Scaling Your Team
+- Establish rituals from the playbooks so culture scales with headcount.
+- Use meta-skill flywheels to onboard new hires quickly.
+- Revisit diagnostics each quarter to keep hiring standards high.
 
 ---
 
