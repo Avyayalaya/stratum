@@ -1,7 +1,7 @@
 # Domain: Cognitive Mastery
 
 ## What is Cognitive Mastery?
-**Cognitive Mastery** is the ability to think clearly, decide effectively, and learn rapidly—especially under pressure. It is the mental core of high-performance work.
+**Cognitive Mastery** is the ability to think clearly, decide effectively, and learn rapidly—especially under pressure. It is the mental core of high-performance work. When hiring, Cognitive Mastery signals how well someone will navigate ambiguous problems.
 
 This domain is what distinguishes elite strategists, resilient founders, and product thinkers. It doesn't just enable smart thinking—it enables **forward movement when the path isn’t clear**.
 

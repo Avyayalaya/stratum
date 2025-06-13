@@ -1,7 +1,7 @@
 # Domain: Trust Dynamics
 
 ## What is Trust Dynamics?
-**Trust Dynamics** is the domain of influence, alignment, communication, and collaboration. It governs how trust is earned, transferred, repaired, and expanded within teams and across systems.
+**Trust Dynamics** is the domain of influence, alignment, communication, and collaboration. It governs how trust is earned, transferred, repaired, and expanded within teams and across systems. Scaling teams depends on the invisible trust flows this domain makes explicit.
 
 This domain isn't about being liked—it's about being trusted, understood, and followed when it counts.
 
