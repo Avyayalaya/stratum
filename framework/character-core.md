@@ -1,7 +1,7 @@
 # Domain: Character Core
 
 ## What is Character Core?
-**Character Core** is the internal strength that enables composure, courage, and clarity in moments of stress, uncertainty, and pressure. It is the invisible force that steadies action when fear, ego, or fatigue threaten to derail it.
+**Character Core** is the internal strength that enables composure, courage, and clarity in moments of stress, uncertainty, and pressure. It is the invisible force that steadies action when fear, ego, or fatigue threaten to derail it. Evaluating for Character Core helps you see how a candidate will show up when the stakes are high.
 
 This domain reflects not just what a person can do—but who they choose to be when it matters.
 
