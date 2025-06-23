@@ -88,6 +88,17 @@ Each domain includes 5 meta-skills, foundational documents, tactical playbooks, 
 - Use meta-skill flywheels to onboard new hires quickly.
 - Revisit diagnostics each quarter to keep hiring standards high.
 
+## 🚀 Interactive CLI
+Run Stratum's command line coach to work through diagnostics, scenarios and microbehaviors directly in your terminal.
+
+```bash
+npm install
+node cli/index.js
+```
+
+Follow the prompts to choose a domain, answer diagnostic questions, explore simulation decks and pick field-note rituals.
+
+
 ---
 
 ## 👤 Author & License
