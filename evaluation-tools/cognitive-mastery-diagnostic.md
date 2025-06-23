@@ -54,7 +54,10 @@ Each section contains 5 statements (one per meta-skill). Rate each from **1 (Str
 
 ## Scoring Guidance
 
-### Total Score Ranges (Out of 25 per skill):
+Add up your ratings for the five statements under each skill. This gives a score
+out of **25** for that skill. Use the ranges below to interpret each skill's
+score:
+
 | Score | Interpretation |
 |-------|----------------|
 | 21–25 | Core strength – can coach others |
