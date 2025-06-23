@@ -56,6 +56,9 @@ Rate each statement on a scale of **1 (Strongly Disagree)** to **5 (Strongly Agr
 
 ## Scoring Guidance
 
+Sum the five ratings listed under each skill to get a score out of **25**. Apply
+the ranges below to gauge your current strength for that skill.
+
 | Score (per skill) | Interpretation |
 |------------------|----------------|
 | 21–25 | Deep strength – anchors trust and alignment in systems |
