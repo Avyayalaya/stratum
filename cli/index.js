@@ -84,11 +84,11 @@ async function runDiagnostics() {
   const content = fs.readFileSync(file, 'utf8');
   const sections = parseDiagnostic(content);
 
-  let total = 0;
   console.log(`\n${domain} Diagnostic`);
 
   for (const sec of sections) {
     console.log(`\n${sec.skill}`);
+    let secTotal = 0;
     for (const statement of sec.statements) {
       const { score } = await inquirer.prompt({
         type: 'input',
@@ -96,18 +96,17 @@ async function runDiagnostics() {
         message: `${statement} (1-5)`,
         validate: v => /^[1-5]$/.test(v) || 'Enter a number 1-5'
       });
-      total += parseInt(score, 10);
+      secTotal += parseInt(score, 10);
     }
+    const interpretation = interpretScore(secTotal);
+    console.log(`Score: ${secTotal} - ${interpretation}`);
   }
-
-  const interpretation = interpretScore(total);
-  console.log(`\nTotal Score: ${total}\n${interpretation}\n`);
 }
 
 function interpretScore(score) {
-  if (score >= 105) return 'Deep strength – anchors trust and alignment in systems';
-  if (score >= 80) return 'Solid foundation – influence and clarity are consistently felt';
-  if (score >= 55) return 'Functional but uneven – watch for blind spots under pressure';
+  if (score >= 21) return 'Deep strength – anchors trust and alignment in systems';
+  if (score >= 16) return 'Solid foundation – influence and clarity are consistently felt';
+  if (score >= 11) return 'Functional but uneven – watch for blind spots under pressure';
   return 'Growth area – may erode trust without intention or clarity';
 }
 

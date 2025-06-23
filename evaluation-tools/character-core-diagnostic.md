@@ -56,6 +56,9 @@ Rate each statement on a scale of **1 (Strongly Disagree)** to **5 (Strongly Agr
 
 ## Scoring Guidance
 
+Add together the five ratings under each skill to get a total out of **25**.
+Use the ranges below to understand your capability for that skill.
+
 | Score (per skill) | Interpretation |
 |------------------|----------------|
 | 21–25 | Deep capability – leads with character under pressure |
