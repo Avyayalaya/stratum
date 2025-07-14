@@ -65,6 +65,11 @@ Each domain includes 5 meta-skills, foundational documents, tactical playbooks, 
 - [Character Core Field Notes](./coaching-playbook/character-field-notes.md)
 - [Trust Dynamics Field Notes](./coaching-playbook/trust-dynamics-field-notes.md)
 
+### 👥 Role Playbooks
+- [Engineering Playbook](./coaching-playbook/engineering/README.md)
+- [Product Playbook](./coaching-playbook/product/README.md)
+- [Operations Playbook](./coaching-playbook/operations/README.md)
+
 ### 🔁 Flywheel Case Studies
 - [Cognitive Mastery Flywheel](./meta-skills/cognitive-flywheel-case.md)
 - [Character Core Flywheel](./meta-skills/character-flywheel-case.md)
