@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import inquirer from 'inquirer';
 import MarkdownIt from 'markdown-it';
 
@@ -30,6 +31,25 @@ const BASE_PATHS = {
   notes: path.join(process.cwd(), 'coaching-playbook')
 };
 
+const HISTORY_DIR = path.join(os.homedir(), '.stratum');
+const HISTORY_FILE = path.join(HISTORY_DIR, 'history.json');
+
+function loadHistory() {
+  try {
+    const data = fs.readFileSync(HISTORY_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(history) {
+  if (!fs.existsSync(HISTORY_DIR)) {
+    fs.mkdirSync(HISTORY_DIR, { recursive: true });
+  }
+  fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
+}
+
 async function mainMenu() {
   let exit = false;
   while (!exit) {
@@ -37,7 +57,7 @@ async function mainMenu() {
       type: 'list',
       name: 'choice',
       message: 'Select an option',
-      choices: ['Diagnostics', 'Scenarios', 'Field Notes', 'Exit']
+      choices: ['Diagnostics', 'Scenarios', 'Field Notes', 'History', 'Exit']
     });
 
     if (choice === 'Diagnostics') {
@@ -46,6 +66,8 @@ async function mainMenu() {
       await runScenarios();
     } else if (choice === 'Field Notes') {
       await showFieldNotes();
+    } else if (choice === 'History') {
+      await showHistory();
     } else {
       exit = true;
     }
@@ -86,6 +108,7 @@ async function runDiagnostics() {
 
   console.log(`\n${domain} Diagnostic`);
 
+  const scores = [];
   for (const sec of sections) {
     console.log(`\n${sec.skill}`);
     let secTotal = 0;
@@ -100,7 +123,17 @@ async function runDiagnostics() {
     }
     const interpretation = interpretScore(secTotal);
     console.log(`Score: ${secTotal} - ${interpretation}`);
+    scores.push({ skill: sec.skill, score: secTotal });
   }
+
+  const history = loadHistory();
+  history.push({
+    timestamp: new Date().toISOString(),
+    domain,
+    scores
+  });
+  saveHistory(history);
+  console.log('Results saved.');
 }
 
 function interpretScore(score) {
@@ -183,6 +216,56 @@ async function showFieldNotes() {
     choices: notes
   });
   console.log(`\nSelected microbehavior:\n${note}\n`);
+}
+
+async function showHistory() {
+  const history = loadHistory();
+  if (!history.length) {
+    console.log('No diagnostic history found.');
+    return;
+  }
+
+  const choices = history.map((h, i) => ({
+    name: `${new Date(h.timestamp).toLocaleString()} - ${h.domain}`,
+    value: i
+  }));
+  choices.push(new inquirer.Separator(), 'Progress Summary', 'Back');
+
+  const { selection } = await inquirer.prompt({
+    type: 'list',
+    name: 'selection',
+    message: 'Select a record or view summary',
+    choices
+  });
+
+  if (selection === 'Back') return;
+  if (selection === 'Progress Summary') {
+    showProgressSummary(history);
+    return;
+  }
+
+  const rec = history[selection];
+  console.log(`\n${rec.domain} Diagnostic on ${new Date(rec.timestamp).toLocaleString()}`);
+  for (const s of rec.scores) {
+    console.log(`${s.skill}: ${s.score}`);
+  }
+  console.log('');
+}
+
+function showProgressSummary(history) {
+  const summary = {};
+  for (const h of history) {
+    const total = h.scores.reduce((a, b) => a + b.score, 0);
+    if (!summary[h.domain]) summary[h.domain] = { total: 0, count: 0 };
+    summary[h.domain].total += total;
+    summary[h.domain].count += 1;
+  }
+  console.log('\nAverage Scores by Domain:');
+  for (const [domain, data] of Object.entries(summary)) {
+    const avg = (data.total / data.count).toFixed(2);
+    console.log(`${domain}: ${avg}`);
+  }
+  console.log('');
 }
 
 mainMenu();
