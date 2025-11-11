@@ -93,17 +93,6 @@ Each domain includes 5 meta-skills, foundational documents, tactical playbooks, 
 - Use meta-skill flywheels to onboard new hires quickly.
 - Revisit diagnostics each quarter to keep hiring standards high.
 
-## 🚀 Interactive CLI
-Run Stratum's command line coach to work through diagnostics, scenarios and microbehaviors directly in your terminal.
-
-```bash
-npm install
-node cli/index.js
-```
-
-Follow the prompts to choose a domain, answer diagnostic questions, explore simulation decks and pick field-note rituals.
-
-
 ---
 
 ## 👤 Author & License
@@ -111,12 +100,6 @@ Built by [Parth Sangani](https://www.linkedin.com/in/parthsangani/) — product 
 
 Stratum is MIT licensed. Fork, remix, build teams with it, or integrate into your own coaching frameworks.
 
----
-
-## 📌 Future Additions
-- Stratum Coaching Agent (in progress)
-- Stratum Team Health Dashboard (Excel + Notion templates)
-- Printable Cards for Meta-Skill Rituals
 
 ---
 
@@ -129,4 +112,3 @@ If this framework helped you—or you’ve adapted it for your org, team, or por
 
 ## Tags
 `#stratum` `#leadership` `#meta-skills` `#team-building` `#decision-making` `#trust` `#clarity`
-
