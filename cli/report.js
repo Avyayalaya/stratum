@@ -29,6 +29,51 @@ const SKILL_DOMAIN = {
   'Confidence Calibration':            'Trust Dynamics',
 };
 
+const MODE_BADGES = {
+  demonstrated: { label: '✓ Demonstrated', color: '#166534', bg: '#F0FDF4' },
+  partial:      { label: '◐ Partial', color: '#92400E', bg: '#FFFBEB' },
+  avoidance:    { label: '⚠ Avoidance pattern', color: '#991B1B', bg: '#FEF2F2' },
+  trait_claim:  { label: '⚠ Trait claim', color: '#991B1B', bg: '#FEF2F2' },
+  insufficient: { label: '? Insufficient evidence', color: '#6B7280', bg: '#F3F4F6' },
+};
+
+const DOMAIN_RISK = {
+  'Cognitive Mastery': 'Decision quality risk — may produce poor outcomes under uncertainty',
+  'Character Core':    'Pressure vulnerability — performance likely degrades under constraint',
+  'Trust Dynamics':    'Team risk — may cause attrition, misalignment, or trust erosion',
+};
+
+function modeBadge(mode) {
+  const b = MODE_BADGES[mode] || MODE_BADGES.partial;
+  return `<span style="font-size:10px;color:${b.color};background:${b.bg};padding:1px 6px;border-radius:3px;margin-left:6px;">${b.label}</span>`;
+}
+
+function riskFlags(scores, avgScore) {
+  const risks = scores.filter(s => s.score <= 2);
+  if (!risks.length) return '';
+
+  let html = `
+    <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:20px 24px;margin-bottom:28px;">
+      <h3 style="font-size:14px;font-weight:700;color:#991B1B;text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;">⚠ Risk Flags</h3>`;
+
+  for (const s of risks) {
+    const domain = SKILL_DOMAIN[s.skill] || 'Cognitive Mastery';
+    const riskText = DOMAIN_RISK[domain];
+    const modeInfo = s.mode && s.mode !== 'demonstrated' && s.mode !== 'partial'
+      ? ` <em style="color:#6B7280;">(${MODE_BADGES[s.mode]?.label || s.mode})</em>`
+      : '';
+    const avgNote = avgScore >= 3.5 ? ` Despite strong overall profile (${avgScore}/5), this` : ' This';
+    html += `
+      <div style="padding:8px 0;border-bottom:1px solid #FECACA66;">
+        <span style="font-weight:600;color:#991B1B;">${s.skill}: ${s.score}/5</span>${modeInfo}
+        <p style="font-size:12px;color:#7F1D1D;margin:4px 0 0 0;">${avgNote} gap signals: ${riskText}</p>
+      </div>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
 function scoreBar(score, domain) {
   const c = DOMAIN_COLORS[domain] || { bg: '#F3F4F6', bar: '#6B7280', text: '#374151' };
   const pct = (score / 5) * 100;
@@ -58,10 +103,11 @@ function skillSection(scores) {
       const selfRatedBadge = s.selfRated
         ? `<span style="font-size:10px;color:#B45309;background:#FEF3C7;padding:1px 5px;border-radius:3px;margin-left:8px;">⚠ Self-reported</span>`
         : '';
+      const mBadge = s.mode ? modeBadge(s.mode) : '';
       html += `
         <div style="margin-bottom:10px;">
           <div style="display:flex;justify-content:space-between;align-items:baseline;">
-            <span style="font-size:14px;color:#111827;font-weight:500;">${s.skill}${selfRatedBadge}</span>
+            <span style="font-size:14px;color:#111827;font-weight:500;">${s.skill}${selfRatedBadge}${mBadge}</span>
           </div>
           ${scoreBar(s.score, domain)}
           ${s.evidence ? `<p style="font-size:12px;color:#6B7280;margin:2px 0 0 0;font-style:italic;">"${s.evidence}"</p>` : ''}
@@ -177,6 +223,9 @@ export function generateReport({ name, role, date, scores, roadmapText }) {
 
   <!-- Strengths & Gaps -->
   ${strengthsAndGaps(scores, role)}
+
+  <!-- Risk Flags -->
+  ${riskFlags(scores, avgScore)}
 
   <!-- All Skills -->
   <h2 style="font-size:16px;font-weight:700;color:#111827;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #E5E7EB;">Full Skill Profile</h2>

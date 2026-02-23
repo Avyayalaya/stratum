@@ -7,6 +7,7 @@ import MarkdownIt from 'markdown-it';
 import { scoreSkill } from './scorer.js';
 import { generateRoadmap } from './roadmap.js';
 import { generateReport } from './report.js';
+import { generateTeamReport } from './team-report.js';
 
 const SKILLS = [
   { domain: 'Cognitive Mastery',  skill: 'First Principles Thinking',        file: 'first-principles-thinking.md' },
@@ -78,11 +79,15 @@ async function mainMenu() {
       type: 'list',
       name: 'choice',
       message: 'Select an option',
-      choices: ['Agentic Assessment', 'Diagnostics', 'Scenarios', 'Field Notes', 'History', 'Exit']
+      choices: ['Agentic Assessment', 'Team Report', 'Scenario Assessment', 'Diagnostics', 'Scenarios', 'Field Notes', 'History', 'Exit']
     });
 
     if (choice === 'Agentic Assessment') {
       await runAgenticAssessment();
+    } else if (choice === 'Team Report') {
+      await runTeamReport();
+    } else if (choice === 'Scenario Assessment') {
+      await runScenarioAssessment();
     } else if (choice === 'Diagnostics') {
       await runDiagnostics();
     } else if (choice === 'Scenarios') {
@@ -379,9 +384,147 @@ async function runAgenticAssessment() {
     assessmentNumber: previousForPerson.length + 1,
     aiScoredCount: results.filter(r => !r.selfRated).length,
     selfRatedCount: results.filter(r => r.selfRated).length,
-    scores: results.map(r => ({ skill: r.skill, score: r.score, evidence: r.evidence, selfRated: !!r.selfRated })),
+    scores: results.map(r => ({ skill: r.skill, score: r.score, evidence: r.evidence, mode: r.mode || 'partial', selfRated: !!r.selfRated })),
   });
   saveHistory(history);
+}
+
+// ── Team Report ──
+async function runTeamReport() {
+  const history = loadHistory();
+  const uniqueNames = [...new Set(history.map(h => h.name))];
+
+  if (uniqueNames.length < 2) {
+    console.log('\n⚠ Need at least 2 assessed individuals in history. Run individual assessments first.\n');
+    return;
+  }
+
+  const { selected } = await inquirer.prompt({
+    type: 'checkbox',
+    name: 'selected',
+    message: 'Select team members (min 2)',
+    choices: uniqueNames,
+    validate: v => v.length >= 2 || 'Select at least 2 members',
+  });
+
+  const reportPath = generateTeamReport(selected);
+  if (reportPath) {
+    console.log(`\n📊 Team report saved: ${reportPath}\n`);
+  }
+}
+
+// ── Scenario Assessment ──
+async function runScenarioAssessment() {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.log('\n⚠  ANTHROPIC_API_KEY not set. Set it and re-run.\n');
+    return;
+  }
+
+  const { name } = await inquirer.prompt({ type: 'input', name: 'name', message: 'Who is being assessed?' });
+  const { role } = await inquirer.prompt({
+    type: 'list', name: 'role', message: 'Role',
+    choices: ['Product Manager', 'Engineer', 'Operations', 'General'],
+  });
+
+  const SCENARIO_FILES = {
+    'Cognitive Mastery': 'cognitive-scenarios.md',
+    'Character Core': 'character-scenarios.md',
+    'Trust Dynamics': 'trust-scenarios.md',
+  };
+
+  const scenarioDir = path.join(process.cwd(), 'scenario-templates');
+  const results = [];
+
+  for (const [domain, file] of Object.entries(SCENARIO_FILES)) {
+    let content = '';
+    try { content = fs.readFileSync(path.join(scenarioDir, file), 'utf8'); }
+    catch { console.log(`  ⊘ Missing ${file}`); continue; }
+
+    // Extract first scenario from file
+    const scenarioMatch = content.match(/##\s+(?:Scenario\s*\d*|Simulation\s*\d*)[:\s]*(.*?)(?=\n)/i);
+    const situationMatch = content.match(/🧠\s*\*?\*?Situation\*?\*?:?\s*([\s\S]*?)(?=🔍|###)/);
+    const promptMatch = content.match(/🔍\s*\*?\*?Prompt\*?\*?:?\s*([\s\S]*?)(?=🧨|###|##)/);
+
+    if (!situationMatch || !promptMatch) continue;
+
+    const situation = situationMatch[1].trim();
+    const prompt = promptMatch[1].trim().split('\n').filter(l => l.trim()).slice(0, 2).join('\n');
+
+    console.log(`\n${'━'.repeat(50)}`);
+    console.log(`  ${domain.toUpperCase()} — SCENARIO`);
+    console.log(`${'━'.repeat(50)}`);
+    console.log(`\n${situation}\n`);
+    console.log(`${prompt}\n`);
+
+    let { answer } = await inquirer.prompt({ type: 'input', name: 'answer', message: '▶' });
+    if (!answer.trim()) continue;
+
+    // Get the target skills for this scenario
+    const targetMatch = content.match(/Target Skills?:?\s*([\s\S]*?)(?=🧠|###)/i);
+    const targetSkills = targetMatch ? targetMatch[1].trim() : domain;
+
+    // Find the rubric for the primary skill of this domain
+    const domainSkills = SKILLS.filter(s => s.domain === domain);
+    let rubric = '';
+    if (domainSkills.length) {
+      try {
+        const skillContent = fs.readFileSync(path.join(process.cwd(), 'meta-skills', domainSkills[0].file), 'utf8');
+        const rubricMatch = skillContent.match(/### Scoring Rubric[\s\S]*?(?=\n---|\n## )/);
+        rubric = rubricMatch ? rubricMatch[0] : '';
+      } catch {}
+    }
+
+    const system = `You are evaluating a professional's response to a scenario testing "${domain}" meta-skills.
+This person works as a ${role}. The scenario tests: ${targetSkills}
+
+${rubric}
+
+Scoring rules:
+1. Score based on the quality of their reasoning, decision-making approach, and awareness of tradeoffs — not on whether they chose the "right" answer.
+2. Higher scores for: considering multiple stakeholders, identifying hidden risks, proposing reversible actions, acknowledging uncertainty.
+3. Return ONLY valid JSON:
+- "score": integer 1–5
+- "evidence": one sentence max 20 words
+- "mode": "demonstrated" | "partial" | "avoidance" | "trait_claim" | "insufficient"
+
+Raw JSON only.`;
+
+    try {
+      const Anthropic = (await import('@anthropic-ai/sdk')).default;
+      const client = new Anthropic();
+      const msg = await client.messages.create({
+        model: 'claude-3-5-haiku-20241022',
+        max_tokens: 200,
+        system,
+        messages: [{ role: 'user', content: `Scenario response: "${answer}"` }],
+      });
+
+      const parsed = JSON.parse(msg.content[0].text.trim());
+      const score = Math.min(5, Math.max(1, parseInt(parsed.score)));
+      const mode = ['demonstrated', 'partial', 'avoidance', 'trait_claim', 'insufficient'].includes(parsed.mode) ? parsed.mode : 'partial';
+      console.log(`  → ${score}/5  [${mode}]  ${parsed.evidence}`);
+      results.push({ skill: `${domain} (scenario)`, score, evidence: parsed.evidence, mode });
+    } catch (e) {
+      console.log(`  ⚠ Scoring failed: ${e.message}`);
+    }
+  }
+
+  if (results.length) {
+    console.log(`\n${'═'.repeat(50)}`);
+    console.log(`SCENARIO ASSESSMENT — ${name} (${role})`);
+    for (const r of results) {
+      console.log(`  ${r.score >= 4 ? '●' : r.score >= 3 ? '◐' : '○'} ${r.skill.padEnd(35)} ${r.score}/5`);
+    }
+    console.log(`${'═'.repeat(50)}\n`);
+
+    const history = loadHistory();
+    history.push({
+      timestamp: new Date().toISOString(),
+      name, role, mode: 'scenario', domain: 'Scenario Assessment',
+      scores: results.map(r => ({ skill: r.skill, score: r.score, evidence: r.evidence, mode: r.mode })),
+    });
+    saveHistory(history);
+  }
 }
 
 mainMenu();
