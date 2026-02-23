@@ -345,7 +345,7 @@ async function runAgenticAssessment() {
       console.log(`${'━'.repeat(50)}`);
     }
 
-    const result = await scoreSkill(skill, path.join(BASE, file));
+    const result = await scoreSkill(skill, path.join(BASE, file), role);
     if (result) results.push(result);
   }
 
@@ -369,13 +369,17 @@ async function runAgenticAssessment() {
 
   // Save to history
   const history = loadHistory();
+  const previousForPerson = history.filter(h => h.name === name);
   history.push({
     timestamp: new Date().toISOString(),
     name,
     role,
     mode,
     domain: 'Full Stratum',
-    scores: results.map(r => ({ skill: r.skill, score: r.score, evidence: r.evidence })),
+    assessmentNumber: previousForPerson.length + 1,
+    aiScoredCount: results.filter(r => !r.selfRated).length,
+    selfRatedCount: results.filter(r => r.selfRated).length,
+    scores: results.map(r => ({ skill: r.skill, score: r.score, evidence: r.evidence, selfRated: !!r.selfRated })),
   });
   saveHistory(history);
 }

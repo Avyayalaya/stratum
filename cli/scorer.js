@@ -22,7 +22,7 @@ function extractCoaching(content) {
   return match ? match[1].trim() : '';
 }
 
-export async function scoreSkill(skillName, skillFile) {
+export async function scoreSkill(skillName, skillFile, role = 'General') {
   let content = '';
   try {
     content = fs.readFileSync(skillFile, 'utf8');
@@ -48,11 +48,15 @@ export async function scoreSkill(skillName, skillFile) {
   if (!answer.trim()) return null;
 
   const system = `You are evaluating a professional's mastery of the meta-skill: "${skillName}".
+This person works as a ${role}. Evaluate their answer in the professional context of that role. Evidence grounded in their actual work domain (real decisions, real situations, real people) should be weighted higher than abstract or hypothetical examples.
 
 ${rubric}
 
-Score the person 1–5 based on their answer. Return ONLY valid JSON with two fields:
-- "score": integer 1–5 (overall weighted score across rubric dimensions)
+Scoring rules:
+1. If the answer contains no specific behavioral evidence — no concrete situation described, no observable actions taken, no outcome referenced — score no higher than 2 regardless of the claim. Set evidence to "Insufficient behavioral evidence provided."
+2. Score based on specific behavioral evidence of the meta-skill in action, not self-reported character traits. Claims of discipline, persistence, or consistency without concrete situational evidence are not sufficient for scores above 2.
+3. Score 1–5 based on rubric dimensions. Return ONLY valid JSON:
+- "score": integer 1–5
 - "evidence": one sentence max 20 words — what the answer concretely reveals about their level
 
 No markdown, no explanation. Raw JSON only.`;
@@ -77,6 +81,6 @@ No markdown, no explanation. Raw JSON only.`;
       message: 'Rate yourself 1–5:',
       validate: v => /^[1-5]$/.test(v) || 'Enter 1–5',
     });
-    return { skill: skillName, score: parseInt(fallback), evidence: answer.slice(0, 100), coaching };
+    return { skill: skillName, score: parseInt(fallback), evidence: answer.slice(0, 100), coaching, selfRated: true };
   }
 }

@@ -1,6 +1,6 @@
 // Role weights: higher weight = this skill matters MORE for this role.
 // Lower weighted score = bigger priority gap for that person.
-const ROLE_WEIGHTS = {
+export const ROLE_WEIGHTS = {
   'Product Manager': {
     'First Principles Thinking': 1.3,
     'Decision-Making Under Uncertainty': 1.3,
@@ -93,7 +93,7 @@ export function generateRoadmap(scores, role) {
     if (!p.skill) continue;
     out += `\n${p.label}: ${p.skill.skill} (${interpretScore(p.skill.score)})\n`;
     const bullets = getCoachingBullets(p.skill.coaching, p.skill.score);
-    for (const b of bullets) out += `  • ${b}\n`;
+    for (const b of bullets) out += `  • ${b} — Target: 3 instances this sprint. Note what shifted.\n`;
   }
 
   out += `\n${DLINE}\n`;
