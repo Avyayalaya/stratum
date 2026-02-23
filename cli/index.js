@@ -6,6 +6,7 @@ import inquirer from 'inquirer';
 import MarkdownIt from 'markdown-it';
 import { scoreSkill } from './scorer.js';
 import { generateRoadmap } from './roadmap.js';
+import { generateReport } from './report.js';
 
 const SKILLS = [
   { domain: 'Cognitive Mastery',  skill: 'First Principles Thinking',        file: 'first-principles-thinking.md' },
@@ -355,6 +356,16 @@ async function runAgenticAssessment() {
 
   const roadmap = generateRoadmap(results, role);
   console.log(roadmap);
+
+  // Generate shareable HTML report
+  const reportPath = generateReport({
+    name,
+    role,
+    date: new Date().toISOString(),
+    scores: results,
+    roadmapText: roadmap,
+  });
+  console.log(`\n📄 Report saved: ${reportPath}\n`);
 
   // Save to history
   const history = loadHistory();
