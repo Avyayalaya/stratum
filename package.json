@@ -10,9 +10,14 @@
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "stratum": "node cli/index.js"
+  },
+  "bin": {
+    "stratum": "cli/index.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
     "inquirer": "^12.6.3",
     "markdown-it": "^14.1.0",
     "react": "^18.2.0",

@@ -4,6 +4,26 @@ import path from 'path';
 import os from 'os';
 import inquirer from 'inquirer';
 import MarkdownIt from 'markdown-it';
+import { scoreSkill } from './scorer.js';
+import { generateRoadmap } from './roadmap.js';
+
+const SKILLS = [
+  { domain: 'Cognitive Mastery',  skill: 'First Principles Thinking',        file: 'first-principles-thinking.md' },
+  { domain: 'Cognitive Mastery',  skill: 'Decision-Making Under Uncertainty', file: 'decision-making.md' },
+  { domain: 'Cognitive Mastery',  skill: 'Scenario Thinking',                 file: 'scenario-thinking.md' },
+  { domain: 'Cognitive Mastery',  skill: 'Feedback Calibration',              file: 'feedback-calibration.md' },
+  { domain: 'Cognitive Mastery',  skill: 'Bayesian Updating',                 file: 'bayesian-updating.md' },
+  { domain: 'Character Core',     skill: 'Strategic Patience',                file: 'strategic-patience.md' },
+  { domain: 'Character Core',     skill: 'Resilience',                        file: 'resilience.md' },
+  { domain: 'Character Core',     skill: 'Strength of Character',             file: 'strength-of-character.md' },
+  { domain: 'Character Core',     skill: 'Cognitive Decoupling',              file: 'cognitive-decoupling.md' },
+  { domain: 'Character Core',     skill: 'Execution with Reversibility',      file: 'execution-with-reversibility.md' },
+  { domain: 'Trust Dynamics',     skill: 'Trust-Building',                    file: 'trust-building.md' },
+  { domain: 'Trust Dynamics',     skill: 'Ability to Influence',              file: 'ability-to-influence.md' },
+  { domain: 'Trust Dynamics',     skill: 'Narrative Framing',                 file: 'narrative-framing.md' },
+  { domain: 'Trust Dynamics',     skill: 'Tribal Intelligence',               file: 'tribal-intelligence.md' },
+  { domain: 'Trust Dynamics',     skill: 'Confidence Calibration',            file: 'confidence-calibration.md' },
+];
 
 const md = new MarkdownIt();
 
@@ -57,10 +77,12 @@ async function mainMenu() {
       type: 'list',
       name: 'choice',
       message: 'Select an option',
-      choices: ['Diagnostics', 'Scenarios', 'Field Notes', 'History', 'Exit']
+      choices: ['Agentic Assessment', 'Diagnostics', 'Scenarios', 'Field Notes', 'History', 'Exit']
     });
 
-    if (choice === 'Diagnostics') {
+    if (choice === 'Agentic Assessment') {
+      await runAgenticAssessment();
+    } else if (choice === 'Diagnostics') {
       await runDiagnostics();
     } else if (choice === 'Scenarios') {
       await runScenarios();
@@ -266,6 +288,85 @@ function showProgressSummary(history) {
     console.log(`${domain}: ${avg}`);
   }
   console.log('');
+}
+
+async function runAgenticAssessment() {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.log('\n⚠  ANTHROPIC_API_KEY not set. Set it and re-run.\n');
+    return;
+  }
+
+  const { name } = await inquirer.prompt({
+    type: 'input',
+    name: 'name',
+    message: 'Who is being assessed? (name or "me")',
+  });
+
+  const { role } = await inquirer.prompt({
+    type: 'list',
+    name: 'role',
+    message: 'Role',
+    choices: ['Product Manager', 'Engineer', 'Operations', 'General'],
+  });
+
+  const { mode } = await inquirer.prompt({
+    type: 'list',
+    name: 'mode',
+    message: 'Assessment depth',
+    choices: [
+      { name: 'Full  — 15 skills (~20 min, complete profile)', value: 'full' },
+      { name: 'Quick — 3 skills, one per domain (~5 min)',    value: 'quick' },
+    ],
+  });
+
+  const BASE = path.join(process.cwd(), 'meta-skills');
+
+  let skillsToRun = SKILLS;
+  if (mode === 'quick') {
+    skillsToRun = [
+      SKILLS.find(s => s.domain === 'Cognitive Mastery'),
+      SKILLS.find(s => s.domain === 'Character Core'),
+      SKILLS.find(s => s.domain === 'Trust Dynamics'),
+    ];
+  }
+
+  console.log(`\nStarting ${mode === 'quick' ? 'quick' : 'full'} assessment for ${name} (${role})`);
+  console.log('Answer each question honestly — specific situations beat generalities.\n');
+
+  let currentDomain = '';
+  const results = [];
+
+  for (const { domain, skill, file } of skillsToRun) {
+    if (domain !== currentDomain) {
+      currentDomain = domain;
+      console.log(`\n${'━'.repeat(50)}`);
+      console.log(`  ${domain.toUpperCase()}`);
+      console.log(`${'━'.repeat(50)}`);
+    }
+
+    const result = await scoreSkill(skill, path.join(BASE, file));
+    if (result) results.push(result);
+  }
+
+  if (!results.length) {
+    console.log('\nNo results to report.');
+    return;
+  }
+
+  const roadmap = generateRoadmap(results, role);
+  console.log(roadmap);
+
+  // Save to history
+  const history = loadHistory();
+  history.push({
+    timestamp: new Date().toISOString(),
+    name,
+    role,
+    mode,
+    domain: 'Full Stratum',
+    scores: results.map(r => ({ skill: r.skill, score: r.score, evidence: r.evidence })),
+  });
+  saveHistory(history);
 }
 
 mainMenu();

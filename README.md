@@ -77,7 +77,40 @@ Each domain includes 5 meta-skills, foundational documents, tactical playbooks, 
 
 ---
 
-## 🧭 How to Use Stratum
+## 🚀 Quick Start
+
+```bash
+git clone https://github.com/Avyayalaya/stratum.git
+cd stratum
+npm install
+
+# Set your Anthropic API key (needed for Agentic Assessment)
+cp .env.example .env
+# edit .env and add your ANTHROPIC_API_KEY
+
+node cli/index.js
+```
+
+---
+
+## 🤖 Agentic Assessment (New)
+
+The agentic mode replaces Likert self-rating with **behavioral evidence**. Instead of rating yourself 1–5, you answer real questions about real situations. Claude evaluates your answer against the skill rubric and returns a calibrated score + evidence summary.
+
+**What you get:**
+- A score profile across all 15 meta-skills (or 3 in quick mode)
+- Role-weighted gap analysis (PM, Engineer, Operations, or General)
+- A 4-week sprint plan with specific rituals pulled from the coaching playbook
+- History saved to `~/.stratum/history.json` — tracks progress over time
+
+**Why it's more accurate than self-rating:**
+- Removes Dunning-Kruger inflation — your answer is the evidence, not your self-image
+- Scores are calibrated against the same rubric across all people
+- Evidence text becomes your coaching anchor in 1:1s
+
+---
+
+
 
 ### During Hiring
 - Apply the domain [Diagnostics](./evaluation-tools/cognitive-mastery-diagnostic.md) and [Scenario Decks](./scenario-templates/cognitive-scenarios.md) as advanced interview tools.
