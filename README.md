@@ -69,11 +69,15 @@ Each domain includes 5 meta-skills, foundational documents, tactical playbooks, 
 - [Engineering Playbook](./coaching-playbook/engineering/README.md)
 - [Product Playbook](./coaching-playbook/product/README.md)
 - [Operations Playbook](./coaching-playbook/operations/README.md)
+- [Hiring Playbook](./coaching-playbook/hiring-playbook.md) — Structured interviewing guide using Stratum meta-skills as evaluation criteria
+
+### 🤖 AI Skill File
+- [Stratum Assessment Skill](./ai-skill/stratum-assessment.skill.md) — Codex-format skill file for AI-powered meta-skill evaluation. Use with Claude Code or compatible AI assistants.
 
 ### 🔁 Flywheel Case Studies
-- [Cognitive Mastery Flywheel](./meta-skills/cognitive-flywheel-case.md)
-- [Character Core Flywheel](./meta-skills/character-flywheel-case.md)
-- [Trust Dynamics Flywheel](./meta-skills/trust-dynamics-flywheel-case.md)
+- [Cognitive Mastery Flywheel](./framework/cognitive-mastery-flywheel.md)
+- [Character Core Flywheel](./framework/character-core-flywheel.md)
+- [Trust Dynamics Flywheel](./framework/trust-dynamics-flywheel.md)
 
 ---
 
