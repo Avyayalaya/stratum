@@ -1,5 +1,7 @@
-# Stratum Hiring Playbook
+# Stratum Selection Playbook
 ## How to Interview for Meta-Skills and Build Elite Teams
+
+> **🔍 Audit in progress (Phase 1.1).** This playbook is operational and used at production scale. The Phase 1.1 architecture audit is sharpening its first-principles defensibility; supporting + counter-evidence land in the [Evidence Ledger](../../ledger/). Phase 1.2 (skill-by-skill) deepens the per-skill questions, probes, and red flags. Selection Playbook v1.0 ships at end of Phase 1.3. Audit narration: [Parth on LinkedIn](https://www.linkedin.com/in/parthsangani).
 
 > *"Hire for what people do under pressure, not for what they are on paper — because what they do can be developed, and what they are cannot."*
 
