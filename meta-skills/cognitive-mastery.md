@@ -1,5 +1,8 @@
 # Domain Overview: Cognitive Mastery
 
+> **[Audit in progress — Phase 1.1]** This page is part of the Stratum architecture audit being run in public. The skill / decision / diagnostic on this page is operational and used at production scale; the audit is sharpening its first-principles defensibility and surfacing supporting + counter-evidence in the [Evidence Ledger](../ledger/). Refinements (if any) land at end of Phase 1.1 (architecture) or Phase 1.2 (skills). Audit narration: [Parth on LinkedIn](https://www.linkedin.com/in/parthsangani).
+
+
 ## What is Cognitive Mastery?
 **Cognitive Mastery** is the ability to think clearly, decide effectively, and learn rapidly — especially under pressure. It is the mental core of high-performance work. When hiring, Cognitive Mastery signals how well someone will navigate ambiguous problems without freezing or flailing.
 

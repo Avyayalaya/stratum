@@ -1,5 +1,8 @@
 # Domain Overview: Character Core
 
+> **[Audit in progress — Phase 1.1]** This page is part of the Stratum architecture audit being run in public. The skill / decision / diagnostic on this page is operational and used at production scale; the audit is sharpening its first-principles defensibility and surfacing supporting + counter-evidence in the [Evidence Ledger](../ledger/). Refinements (if any) land at end of Phase 1.1 (architecture) or Phase 1.2 (skills). Audit narration: [Parth on LinkedIn](https://www.linkedin.com/in/parthsangani).
+
+
 ## What is Character Core?
 **Character Core** is the internal strength that enables composure, courage, and clarity in moments of stress, uncertainty, and pressure. It is the invisible force that steadies action when fear, ego, or fatigue threaten to derail it. Evaluating for Character Core reveals how someone will show up when the stakes are high.
 

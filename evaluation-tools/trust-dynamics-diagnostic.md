@@ -1,5 +1,8 @@
 # Trust Dynamics Diagnostic
 
+> **[Audit in progress — Phase 1.1]** This page is part of the Stratum architecture audit being run in public. The skill / decision / diagnostic on this page is operational and used at production scale; the audit is sharpening its first-principles defensibility and surfacing supporting + counter-evidence in the [Evidence Ledger](../ledger/). Refinements (if any) land at end of Phase 1.1 (architecture) or Phase 1.2 (skills). Audit narration: [Parth on LinkedIn](https://www.linkedin.com/in/parthsangani).
+
+
 ## Purpose
 This diagnostic helps individuals and teams assess their real-world strength across the five core meta-skills of **Trust Dynamics**. It reveals how effectively you build, sustain, and operate within trust-based systems—across stakeholders, functions, and influence paths.
 

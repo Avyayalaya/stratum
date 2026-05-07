@@ -1,5 +1,8 @@
 # Flywheel Case Study: Cognitive Mastery in Motion
 
+> **[Audit in progress — Phase 1.1]** This page is part of the Stratum architecture audit being run in public. The skill / decision / diagnostic on this page is operational and used at production scale; the audit is sharpening its first-principles defensibility and surfacing supporting + counter-evidence in the [Evidence Ledger](../ledger/). Refinements (if any) land at end of Phase 1.1 (architecture) or Phase 1.2 (skills). Audit narration: [Parth on LinkedIn](https://www.linkedin.com/in/parthsangani).
+
+
 ## Situation
 You’re the product lead of a fast-growing B2B startup. A new competitor enters your space with an AI-powered feature that could disrupt your current roadmap. Leadership expects a counter-strategy within the next two weeks, but your own data is inconclusive, your engineering team is mid-sprint, and customer feedback is contradictory.
 
