@@ -4,16 +4,17 @@
 
 ## Decision
 
-Stratum applies level-specific modifiers to function weights via a 15 × 6 table (15 skills × 6 levels: IC, Senior IC, Manager, Director, VP, C-Suite). Level modifiers reflect the universal pattern that the operating surface shifts from Person↔Problem (the IC's interface) toward Person↔People (the executive's interface) as level rises. Concrete instances of this pattern:
+**Reconciled 2026-07-06 (v1.1).** The original design applied a 15 × 6 modifier table (90 hand-set cells across IC / Senior IC / Manager / Director / VP / C-Suite). The audit found that table indefensible — the values were reasoned, not calibrated — and an empirical test ([reconciliation note](../docs/weighting_and_levels_reconciliation_2026-07-06.md)) showed the elaborate weighting rarely changes the development priority a person receives (top-3 gaps identical to a unit-weighted model ~75% of the time). **The 90-cell table is retired.**
 
-- **Tribal Intelligence** at IC = 0.3 modifier; at C-Suite = 2.5 modifier
-- **Trust-Building** jumps sharply at the Manager transition (1.0 → 1.8) — you cannot manage without trust
-- **First Principles Thinking** peaks at Senior IC (1.2), dips at Manager (1.0 — enabling > solving), returns at C-Suite (1.2)
-- **Strength of Character** at C-Suite = 2.5 — your integrity IS the institution
+The reconciled model is a **coarse 3 × 3 band** (3 domains × 3 levels), monotonic by design, expressing the one robust finding: as level rises, the differentiating emphasis shifts from Person↔Problem (cognitive) toward Person↔People (trust).
 
-Combined weight: `W_final = W_function × M_level`. Gap = `(5 − S) × W_final`. Hiring threshold: `W_final ≥ 4.0` AND `S ≤ 2` = hard no.
+| Domain | IC | Manager | Executive |
+|--------|----|---------|-----------|
+| Cognitive Mastery | 1.2 | 1.0 | 0.9 |
+| Character Core | 1.0 | 1.1 | 1.2 |
+| Trust Dynamics | 0.8 | 1.2 | 1.5 |
 
-**Audit priority for Phase 1.1:** each of the 90 cells needs defensible reasoning OR the table needs simplification. The current values were derived from first-principles reasoning + practitioner experience, not from data — the audit must either ground each cell or shrink the table to a smaller defensible structure.
+This is now **implemented in code** (`cli/roadmap.js` → `LEVEL_BANDS`, `effectiveWeight`), so the spec and the tool agree. Nine traceable values, not ninety hand-set cells. Combined: `effectiveWeight = W_function × M_level`; `gap = (5 − S) × effectiveWeight`.
 
 ## Supporting Evidence
 
@@ -21,6 +22,7 @@ Combined weight: `W_final = W_function × M_level`. Gap = `(5 − S) × W_final`
 |-------|--------|--------------|
 | Leadership skill requirements shift systematically across organizational levels — cognitive/strategic skills rise toward the top, interpersonal/business skills anchor lower levels. The most direct empirical support for a level-modifier gradient. | Mumford, T. V., Campion, M. A., & Morgeson, F. P. (2007). The leadership skills strataplex: Leadership skill requirements across organizational levels. *The Leadership Quarterly, 18*(2), 154–166. | yes — [10.1016/j.leaqua.2007.01.005](https://doi.org/10.1016/j.leaqua.2007.01.005) |
 | The relative importance of technical, human, and conceptual skills changes with managerial level — the conceptual ancestor of the Person↔Problem → Person↔People axis shift. | Katz, R. L. (1955 / 1974 reprint). Skills of an effective administrator. *Harvard Business Review, 33*(1) / 52(5). | yes — [hbr.org/1974/09](https://hbr.org/1974/09/skills-of-an-effective-administrator) (pre-DOI; 1974 reprint confirmed) |
+| The elaborate weighting rarely changes guidance — top-3 development gaps match a unit-weighted model ~75% of the time (mean Jaccard 0.87) across 5,000 seeded profiles/role. Empirical basis for a coarse 3×3 band rather than 90 cells. | Stratum weighting robustness test, 2026-07-06 — `cli/weighting-test.js`; writeup `docs/weighting_and_levels_reconciliation_2026-07-06.md`. | yes — in-repo, reproducible (`node cli/weighting-test.js`) |
 
 ## Counter-Evidence Triggers
 
@@ -33,6 +35,7 @@ Combined weight: `W_final = W_function × M_level`. Gap = `(5 − S) × W_final`
 
 - **v0.0 (2026-05-07)** — scaffold.
 - **v1.0 (2026-07-06)** — Phase 1.1 architecture audit: supporting + counter-evidence populated; all citations DOI-verified via CrossRef. **Standing recommendation:** the *direction* of the level gradient is well-supported (Mumford, Katz); the *90 specific cell values* are not. Collapse to coarse bands or a smaller table until validation data exists. This entry keeps its honest flag: the concept holds, the precision does not.
+- **v1.1 (2026-07-06)** — Reconciled spec↔code. Retired the 90-cell table; shipped a coarse 3×3 band implemented in `cli/roadmap.js`, backed by the in-repo robustness test. The honest flag is resolved: direction is evidence-backed, precision is now coarse. Counter-triggers below still stand (weights remain reasoned, not calibrated).
 
 ---
 

@@ -25,10 +25,54 @@ export const ROLE_WEIGHTS = {
   },
 };
 
-function getPriority(skillName, rawScore, role) {
-  const weight = (ROLE_WEIGHTS[role] || {})[skillName] || 1.0;
-  // priority = effective gap score (lower = bigger gap for this role)
-  return rawScore / weight;
+// Domain of each skill — used to apply level-band emphasis.
+export const SKILL_DOMAIN = {
+  'First Principles Thinking': 'Cognitive Mastery',
+  'Decision-Making Under Uncertainty': 'Cognitive Mastery',
+  'Scenario Thinking': 'Cognitive Mastery',
+  'Feedback Calibration': 'Cognitive Mastery',
+  'Bayesian Updating': 'Cognitive Mastery',
+  'Strategic Patience': 'Character Core',
+  'Resilience': 'Character Core',
+  'Strength of Character': 'Character Core',
+  'Cognitive Decoupling': 'Character Core',
+  'Execution with Reversibility': 'Character Core',
+  'Trust-Building': 'Trust Dynamics',
+  'Ability to Influence': 'Trust Dynamics',
+  'Narrative Framing': 'Trust Dynamics',
+  'Tribal Intelligence': 'Trust Dynamics',
+  'Confidence Calibration': 'Trust Dynamics',
+};
+
+// Coarse level bands (3 domains x 3 levels) — replaces the old 15x6 table.
+// Grounded in the leadership-skills strataplex (Mumford, Campion & Morgeson 2007)
+// and Katz (1955): as level rises, the differentiating emphasis shifts from
+// Person<->Problem (cognitive) toward Person<->People (trust). Coarse by design —
+// the audit (ledger/level_modifiers.md) found fine-grained cells indefensible.
+export const LEVEL_BANDS = {
+  'Cognitive Mastery': { IC: 1.2, Manager: 1.0, Executive: 0.9 },
+  'Character Core':    { IC: 1.0, Manager: 1.1, Executive: 1.2 },
+  'Trust Dynamics':    { IC: 0.8, Manager: 1.2, Executive: 1.5 },
+};
+
+function levelModifier(skill, level) {
+  if (!level) return 1.0; // no level supplied -> neutral
+  const domain = SKILL_DOMAIN[skill];
+  return (LEVEL_BANDS[domain] && LEVEL_BANDS[domain][level]) || 1.0;
+}
+
+// effectiveWeight = function importance x level-band emphasis.
+export function effectiveWeight(skill, role, level = null) {
+  const w = (ROLE_WEIGHTS[role] || {})[skill] || 1.0;
+  return w * levelModifier(skill, level);
+}
+
+// Development priority = weighted distance from mastery. Bigger gap = higher priority.
+// gap = (5 - score) x effectiveWeight   (canonical formula; matches the spec)
+export function rankByGap(scores, role, level = null) {
+  return [...scores]
+    .map(s => ({ ...s, gap: (5 - s.score) * effectiveWeight(s.skill, role, level) }))
+    .sort((a, b) => (b.gap - a.gap) || (a.score - b.score));
 }
 
 function interpretScore(score) {
@@ -57,11 +101,9 @@ function getCoachingBullets(coaching, score) {
 const LINE = '─'.repeat(50);
 const DLINE = '═'.repeat(50);
 
-export function generateRoadmap(scores, role) {
+export function generateRoadmap(scores, role, level = null) {
   const valid = scores.filter(s => s && s.score);
-  const prioritized = valid
-    .map(s => ({ ...s, priority: getPriority(s.skill, s.score, role) }))
-    .sort((a, b) => a.priority - b.priority);
+  const prioritized = rankByGap(valid, role, level);
 
   const gaps = prioritized.slice(0, 3);
   const strengths = [...prioritized].sort((a, b) => b.score - a.score).slice(0, 3);

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import { ROLE_WEIGHTS } from './roadmap.js';
+import { ROLE_WEIGHTS, rankByGap } from './roadmap.js';
 
 const DOMAIN_COLORS = {
   'Cognitive Mastery': { bg: '#EEF2FF', bar: '#6366F1', text: '#3730A3' },
@@ -118,16 +118,13 @@ function skillSection(scores) {
   return html;
 }
 
-function strengthsAndGaps(scores, role) {
+function strengthsAndGaps(scores, role, level = null) {
   const weights = ROLE_WEIGHTS[role] || {};
   // Strengths: raw score (a 5 is a 5)
   const sortedByScore = [...scores].sort((a, b) => b.score - a.score);
   const strengths = sortedByScore.slice(0, 3);
-  // Gaps: role-weighted priority (score / weight — lower = bigger gap for this role)
-  const sortedByPriority = [...scores]
-    .map(s => ({ ...s, priority: s.score / (weights[s.skill] || 1.0) }))
-    .sort((a, b) => a.priority - b.priority);
-  const gaps = sortedByPriority.slice(0, 3);
+  // Gaps: weighted distance from mastery — gap = (5 - score) x effectiveWeight (see roadmap.js)
+  const gaps = rankByGap(scores, role, level).slice(0, 3);
 
   const card = (s, icon, color) => {
     const domain = SKILL_DOMAIN[s.skill] || 'Cognitive Mastery';
@@ -188,7 +185,7 @@ function sprintPlan(roadmapText) {
   return html;
 }
 
-export function generateReport({ name, role, date, scores, roadmapText }) {
+export function generateReport({ name, role, level = null, date, scores, roadmapText }) {
   const dateStr = new Date(date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   const avgScore = (scores.reduce((a, s) => a + s.score, 0) / scores.length).toFixed(1);
 
@@ -222,7 +219,7 @@ export function generateReport({ name, role, date, scores, roadmapText }) {
   </div>
 
   <!-- Strengths & Gaps -->
-  ${strengthsAndGaps(scores, role)}
+  ${strengthsAndGaps(scores, role, level)}
 
   <!-- Risk Flags -->
   ${riskFlags(scores, avgScore)}

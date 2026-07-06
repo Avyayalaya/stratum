@@ -4,21 +4,20 @@
 
 ## Decision
 
-Stratum's gap calculation combines function weight and level modifier into a single per-skill priority score:
+**Reconciled 2026-07-06 (v1.1).** The gap calculation combines function weight and level band into one per-skill priority score, now implemented in code (`cli/roadmap.js`):
 
 ```
-W_final = W_function × M_level
-Gap     = (5 − S) × W_final
+effectiveWeight = W_function × M_level
+gap             = (5 − S) × effectiveWeight     # ranked descending; bigger gap = higher priority
 ```
 
-Where S is the assessed score (1–5), W_function is the function-tier weight (3.0 / 2.0 / 1.5 / 1.0), and M_level is the level modifier from the 15 × 6 table.
+Where S is the assessed score (1–5), **W_function** is a coarse role-importance multiplier (~1.0–1.3; see `ROLE_WEIGHTS`), and **M_level** is the coarse 3 × 3 level band (see [level_modifiers.md](./level_modifiers.md)). The earlier 4-tier weights and 15 × 6 table were retired after the audit (see the [reconciliation note](../docs/weighting_and_levels_reconciliation_2026-07-06.md)).
 
 **Application:**
-- Sort gap scores descending. **Top 3 = 90-day development sprint.** Top 5 = annual development plan.
-- **Hiring threshold:** any skill with `W_final ≥ 4.0` AND `S ≤ 2` is a hard no. This catches the case where a Defining skill at a level where it matters most produces a gap large enough to override all other strengths.
-- The math is deterministic given (function, level, scores) — the human work is in the underlying assessment quality, not in the calculation.
+- Sort gaps descending. **Top 3 = development sprint.**
+- The math is deterministic given (function, level, scores) — the real work is assessment quality, not calculation.
 
-The formula is intentionally simple. It does not weight by recency, urgency, or domain transfer; it does not adjust for how cleanly a skill develops vs. how stuck it is. Those judgments belong in the development plan after gap priority is set, not in the gap math itself.
+**Hard-no gate: deliberately NOT shipped.** The original design proposed a `W_final ≥ 4.0 AND S ≤ 2` hard no. The audit ([gate_skills.md](./gate_skills.md)) shows a hard cutoff on a single-rater 1–5 score (interrater reliability ≈ .52) carries adverse-impact and false-negative risk. The tool surfaces **soft risk flags** for scores ≤ 2, not a terminating verdict, pending validation data.
 
 ## Supporting Evidence
 
@@ -26,6 +25,7 @@ The formula is intentionally simple. It does not weight by recency, urgency, or 
 |-------|--------|--------------|
 | Predictor validity is moderated by job complexity — a theoretical warrant for varying `W_final` across roles and levels. | Hunter, J. E., & Hunter, R. F. (1984). Validity and utility of alternative predictors of job performance. *Psychological Bulletin, 96*(1), 72–98. | yes — [10.1037/0033-2909.96.1.72](https://doi.org/10.1037/0033-2909.96.1.72) |
 | Combining compensatory and non-compensatory (multiple-hurdle) methods is sanctioned practice — *when each is grounded in job analysis*, a condition Stratum has not yet met. | Society for Industrial and Organizational Psychology (2018). *Principles for the Validation and Use of Personnel Selection Procedures* (5th ed.), §3.3–3.4. *Industrial and Organizational Psychology, 11*(S1), 1–97. | yes — [10.1017/iop.2018.195](https://doi.org/10.1017/iop.2018.195) |
+| Empirically, the weighting rarely reorders development priorities vs. unit weights (top-3 identical ~75%, Jaccard 0.87) — supports the reconciled coarse model over the retired 4-tier / 90-cell one. | Stratum weighting robustness test, 2026-07-06 — `cli/weighting-test.js`; `docs/weighting_and_levels_reconciliation_2026-07-06.md`. | yes — in-repo, reproducible (`node cli/weighting-test.js`) |
 
 ## Counter-Evidence Triggers
 
@@ -39,6 +39,7 @@ The formula is intentionally simple. It does not weight by recency, urgency, or 
 
 - **v0.0 (2026-05-07)** — scaffold.
 - **v1.0 (2026-07-06)** — Phase 1.1 architecture audit: supporting + counter-evidence populated; all citations DOI-verified via CrossRef. **Standing recommendation:** run the framework's own simulator with (a) the current weights and (b) unit weights; if the development-priority rankings match, adopt unit weighting per Dawes. The hard-no gate must not ship a point verdict on a single-rater score with reliability ≈ .52 — report a confidence interval or require multiple raters.
+- **v1.1 (2026-07-06)** — Ran that test (`cli/weighting-test.js`): top-3 rankings match a unit-weighted model ~75% of the time. Reconciled spec↔code onto the canonical `gap = (5 − S) × W_function × M_level` with coarse weights + coarse 3×3 level bands, implemented in `cli/roadmap.js`. Hard-no gate deliberately **not** shipped — soft risk flags only. Counter-triggers below stand (weights remain reasoned, not calibrated).
 
 ---
 

@@ -315,6 +315,17 @@ async function runAgenticAssessment() {
     choices: ['Product Manager', 'Engineer', 'Operations', 'General'],
   });
 
+  const { level } = await inquirer.prompt({
+    type: 'list',
+    name: 'level',
+    message: 'Level',
+    choices: [
+      { name: 'Individual Contributor', value: 'IC' },
+      { name: 'Manager',                value: 'Manager' },
+      { name: 'Executive (Director+)',  value: 'Executive' },
+    ],
+  });
+
   const { mode } = await inquirer.prompt({
     type: 'list',
     name: 'mode',
@@ -359,13 +370,14 @@ async function runAgenticAssessment() {
     return;
   }
 
-  const roadmap = generateRoadmap(results, role);
+  const roadmap = generateRoadmap(results, role, level);
   console.log(roadmap);
 
   // Generate shareable HTML report
   const reportPath = generateReport({
     name,
     role,
+    level,
     date: new Date().toISOString(),
     scores: results,
     roadmapText: roadmap,
@@ -379,6 +391,7 @@ async function runAgenticAssessment() {
     timestamp: new Date().toISOString(),
     name,
     role,
+    level,
     mode,
     domain: 'Full Stratum',
     assessmentNumber: previousForPerson.length + 1,
