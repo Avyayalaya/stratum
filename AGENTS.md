@@ -13,7 +13,7 @@
 
 ## What This System Does
 
-Stratum operates a behavioral assessment + development framework at production scale. It scores behavioral evidence (specific Situation + Action + Outcome stories) against calibrated rubrics — never trait self-report — and produces role-weighted gap priorities for hiring decisions, team composition diagnostics, and 90-day development sprints. The framework is currently being audited from first principles in public; the rigor lives in the [Evidence Ledger](./ledger/).
+Stratum is a behavioral assessment + development framework with an open-source CLI. It scores behavioral evidence (specific Situation + Action + Outcome stories) against structured rubrics — never trait self-report — and produces role-weighted gap priorities for development sprints and team-composition diagnostics. The framework is being audited from first principles in public; it has not been validated against outcome data, so it is a structured judgment aid, not a validated predictor. The rigor lives in the [Evidence Ledger](./ledger/).
 
 ## Capabilities
 
@@ -78,6 +78,6 @@ The 15 meta-skills are human-formation primitives — they apply beyond the work
 
 ## Status
 
-v0.5 — architecture audit in progress. Existing skill pages, playbooks, and diagnostics remain operational at production scale. Pages currently being audited carry an audit-in-progress banner pointing to the [Evidence Ledger](./ledger/) for the underlying first-principles work. Architecture refinements (if any) land at end of Phase 1.1; skill deepenings land at end of Phase 1.2; v1.0 ships at end of Phase 1.3.
+v0.5 — architecture audit in progress. The skill pages, playbooks, diagnostics, and CLI are operational and open source; they have not been validated against outcome data. Pages currently being audited carry an audit-in-progress banner pointing to the [Evidence Ledger](./ledger/) for the underlying first-principles work. Architecture refinements (if any) land at end of Phase 1.1; skill deepenings land at end of Phase 1.2; v1.0 ships at end of Phase 1.3.
 
 Audit narration: [Parth on LinkedIn](https://www.linkedin.com/in/parthsangani).
