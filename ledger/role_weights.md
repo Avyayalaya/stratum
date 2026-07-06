@@ -1,6 +1,6 @@
 # Ledger: Role Weighting (Function Profiles)
 
-> **Status: scaffold (v0.0).** This entry will be populated during Phase 1.1 architecture audit. The Decision below reflects pre-audit state per STR-001 thesis v1.0.
+> **Status: audited (v1.0) — 2026-07-06.** Supporting evidence and counter-evidence triggers populated in the Phase 1.1 architecture audit; every citation DOI-verified via CrossRef. Counter-evidence is not a disclaimer — it operationalizes the framework's stance that literature is a feeder, not a ratifier. The triggers state the conditions under which this decision gets revised.
 
 ## Decision
 
@@ -17,18 +17,21 @@ Function profiles are defined for: Product Management, Software Engineering, Des
 
 | Claim | Source | url_verified |
 |-------|--------|--------------|
-| *(populated during Phase 1.1 audit)* | | |
+| Weighting predictors by demonstrated job relevance is the professional standard, grounded in job analysis. | Society for Industrial and Organizational Psychology (2018). *Principles for the Validation and Use of Personnel Selection Procedures* (5th ed.). *Industrial and Organizational Psychology, 11*(S1), 1–97. | yes — [10.1017/iop.2018.195](https://doi.org/10.1017/iop.2018.195) |
+| Skills, abilities, and activities are rated for Importance *per occupation* at national scale — the operational analogue to function-specific weighting. | National Center for O\*NET Development (2024). *O\*NET Database*, U.S. Dept. of Labor. | yes — [onetcenter.org/database.html](https://www.onetcenter.org/database.html) |
+| Predictor validity differs across job families (e.g., cognitive ability matters more for complex jobs) — supports moderating weights by function. | Hunter, J. E., & Hunter, R. F. (1984). Validity and utility of alternative predictors of job performance. *Psychological Bulletin, 96*(1), 72–98. | yes — [10.1037/0033-2909.96.1.72](https://doi.org/10.1037/0033-2909.96.1.72) |
 
 ## Counter-Evidence Triggers
 
 | Trigger | Threshold | Action |
 |---------|-----------|--------|
-| *(populated during Phase 1.1 audit)* | | |
+| Across dozens of judgment domains, unit weights (every skill weighted 1.0) predict outcomes as well as — or better than — optimized differential weights out-of-sample (Dawes 1979, [10.1037/0003-066X.34.7.571](https://doi.org/10.1037/0003-066X.34.7.571)). | If a flat unit-weighted model reproduces the same gap ranking as the 4-tier weights on held-out cases. | Justify the 4-tier scheme empirically or collapse it toward unit weights. The burden of proof is on the weights, not on simplicity. |
 
 ## Refinement History
 
-- **v0.0 (2026-05-07)** — scaffold; populated in Phase 1.1.
+- **v0.0 (2026-05-07)** — scaffold.
+- **v1.0 (2026-07-06)** — Phase 1.1 architecture audit: supporting + counter-evidence populated; all citations DOI-verified via CrossRef. Net: weighting *by job relevance* is standard practice; the specific 4-tier magnitudes need an out-of-sample test against a unit-weight baseline (Dawes) before they earn their complexity.
 
 ---
 
-*Ledger entry per Stratum Phase 1.0 deliverable D4. Source: [PLN-020](../STAGE1.md).*
+*Stratum architecture audit — Phase 1.1 (2026-07-06). Citations verified via CrossRef DOI resolution.*
